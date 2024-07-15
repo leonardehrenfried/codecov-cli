@@ -45,7 +45,7 @@ def send_commit_data(
 ):
     # this is how the CLI receives the username of the user to whom the fork belongs
     # to and the branch name from the action
-    if branch and ":" in branch:
+    if not token and branch and ":" in branch:
         headers = None  # type: ignore
         logger.info("The PR is happening in a forked repo. Using tokenless upload.")
     else:
