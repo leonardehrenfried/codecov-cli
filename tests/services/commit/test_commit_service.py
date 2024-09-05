@@ -1,7 +1,5 @@
 import uuid
 
-import pytest
-from click import ClickException
 from click.testing import CliRunner
 
 from codecov_cli.services.commit import create_commit_logic, send_commit_data
@@ -177,15 +175,24 @@ def test_commit_sender_with_forked_repo_bad_branch(mocker):
         return_value=mocker.MagicMock(status_code=200, text="success"),
     )
 
-    with pytest.raises(ClickException):
-        _res = send_commit_data(
-            "commit_sha",
-            "parent_sha",
-            "1",
-            "branch",
-            "codecov::::codecov-cli",
-            None,
-            "github",
-            None,
-        )
-    mocked_response.assert_not_called()
+    _res = send_commit_data(
+        "commit_sha",
+        "parent_sha",
+        "1",
+        "branch",
+        "codecov::::codecov-cli",
+        None,
+        "github",
+        None,
+    )
+
+    mocked_response.assert_called_with(
+        url="https://api.codecov.io/upload/github/codecov::::codecov-cli/commits",
+        data={
+            "commitid": "commit_sha",
+            "parent_commit_id": "parent_sha",
+            "pullid": "1",
+            "branch": "branch",
+        },
+        headers=None,
+    )
