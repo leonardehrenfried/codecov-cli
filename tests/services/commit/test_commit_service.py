@@ -45,6 +45,7 @@ def test_commit_command_with_warnings(mocker):
         token="token",
         service="service",
         enterprise_url=None,
+        args=None,
     )
 
 
@@ -73,6 +74,7 @@ def test_commit_command_with_error(mocker):
             token="token",
             service="service",
             enterprise_url=None,
+            args={},
         )
 
     out_bytes = parse_outstreams_into_log_lines(outstreams[0].getvalue())
@@ -93,6 +95,7 @@ def test_commit_command_with_error(mocker):
         token="token",
         service="service",
         enterprise_url=None,
+        args={},
     )
 
 
@@ -110,6 +113,7 @@ def test_commit_sender_200(mocker):
         "owner::::repo",
         token,
         "service",
+        None,
         None,
     )
     assert res.error is None
@@ -131,6 +135,7 @@ def test_commit_sender_403(mocker):
         "owner::::repo",
         token,
         "service",
+        None,
         None,
     )
     assert res.error == RequestError(
@@ -156,14 +161,16 @@ def test_commit_sender_with_forked_repo(mocker):
         None,
         "github",
         None,
+        None,
     )
     mocked_response.assert_called_with(
         url="https://api.codecov.io/upload/github/codecov::::codecov-cli/commits",
         data={
+            "branch": "user_forked_repo/codecov-cli:branch",
+            "cli_args": None,
             "commitid": "commit_sha",
             "parent_commit_id": "parent_sha",
             "pullid": "1",
-            "branch": "user_forked_repo/codecov-cli:branch",
         },
         headers=None,
     )
