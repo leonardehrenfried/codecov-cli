@@ -191,15 +191,17 @@ def test_commit_sender_with_forked_repo_bad_branch(mocker):
         None,
         "github",
         None,
+        None,
     )
 
     mocked_response.assert_called_with(
         url="https://api.codecov.io/upload/github/codecov::::codecov-cli/commits",
         data={
+            "branch": "branch",
+            "cli_args": None,
             "commitid": "commit_sha",
             "parent_commit_id": "parent_sha",
             "pullid": "1",
-            "branch": "branch",
         },
         headers=None,
     )
